@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="mainjs.js"></script>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>選課小助手</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/Navigation-Clean.css">
+    <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/Team-Boxed.css">
+</head>
+
+<body style="background: rgb(241,247,252);">
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean" style="background: rgb(241,247,252);">
+        <div class="container"><a class="navbar-brand"  style="font-size: 24px;">NPU選課小助手</a>
+        	<label style="height: 16px;" id="status">尚未登入☺️</label>
+        </div>
+    </nav>
+    <div class="register-photo" style="margin: 12px;" id="loginbar">
+        <div class="form-container" >
+            <form >
+                <h2 class="text-center"><strong>校務系統登入</strong></h2>
+                <div class="form-group"><input class="form-control" type="text" name="uid" id="uid" placeholder="學號" style="opacity: 1;"></div>
+                <div class="form-group"><input class="form-control" type="password" name="pwd" id="pwd" placeholder="密碼"></div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="button" onclick='getdata();' id="loginBtn">登入
+                        <span class="spinner-border spinner-border-sm" role="done" id="loginBtnLoad" hidden></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6" style="background: rgb(241,247,252);border-style: none;font-size: 33px;width: 599px;padding: 106px;">
+                <form>
+                    <p style="font-size: 25px;filter: brightness(0%);font-style: normal;font-weight: bold;">課號查詢</p>
+                    <p style="font-size: 16px;filter: brightness(0%);font-style: normal;font-weight: normal;">課程名稱越完整查詢越快</p>
+                    <input class="form-control" type="text" style="width: 549;height: 20;" id='couName' >
+                    <button class="btn btn-primary " type="button" onclick='getCourse();' id="searchBtn" >
+                        <span class="spinner-border spinner-border-sm" role="done" id="loadingBtn" hidden></span>
+                        查詢
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6" style="background: rgb(241,247,252);box-shadow: 0px 0px 0px;">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="font-size: 18px;">課程<br>名稱</br></th>
+                            <th style="font-size: 18px;">上課<br>時間</br></th>
+                            <th style="font-size: 18px;">可選<br>人數</br></th>
+                            <th style="font-size: 18px;">新增<br>選課</br></th>
+                            <th style="font-size: 18px;">詳細<br>資料</br></th>
+
+                        </tr>
+                        </thead>
+                        <tbody id = 'courseList'>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h2 class="text-center">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#selCourse">
+                選課啦！
+            </button>
+        </h2>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="selCourse" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">目前已選擇課程</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id = goCourseList>
+                    <h6 style="color: red">注意！選課時請注意不得低修高年級科目，需手動紙本加選</h6><br>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th style="font-size: 18px;">課程<br>名稱</br></th>
+                            <th style="font-size: 18px;">課程<br>代號</br></th>
+                            <th style="font-size: 18px;">可選<br>人數</br></th>
+                            <th style="font-size: 18px;">移除<br>課程</br></th>
+                        </tr>
+                        </thead>
+                        <tbody id = 'selCourseList'>
+                        <td>目前還沒選課唷</td>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">不選了</button>
+                    <button type="button" class="btn btn-primary" onclick="goCourse();">選課啦GOGO!!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="coudetial" tabindex="-1" role="dialog" aria-labelledby="coudetialLab" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="coudetialLab">課程詳細資料</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id = "coudtlList">
+                    <p style="font-size: 18px;">課程名稱</p>
+                    <p style="font-size: 18px;">課程學分</p>
+                    <p style="font-size: 18px;">開課班級</p>
+                    <p style="font-size: 18px;">課程代號</p>
+                    <p style="font-size: 18px;">上課時間</p>
+                    <p style="font-size: 18px;">可選人數</p>
+                    <p style="font-size: 18px;">授課教師</p>
+                    <p style="font-size: 18px;">上課教室</p>
+                    <p style="font-size: 18px;">必選修</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="team-boxed" style="background: rgb(241,247,252);">
+        <div class="container" style="background: rgb(241,247,252);">
+            <div class="intro">
+                <h2 class="text-center">開發人員</h2>
+            </div>
+            <div class="row people">
+                <div class="col-md-6 col-lg-4 item blocktext" >
+                    <div class="box"><img class="rounded-circle" src="assets/img/2.png">
+                        <h3 class="name">謝孟恆</h3>
+                        <p class="title">NPU資訊工程系</p>
+                        <p class="description">單身7年徵女友</p>
+                        <div class="social"><a href="https://instagram.com/imbiganna"><i class="fa fa-instagram"></i></a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="background: rgb(241,247,252);"></div>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
