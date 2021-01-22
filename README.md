@@ -5,11 +5,11 @@ NPU選課小幫手，幫你選到你想要的課！
 
 
 # 實作進度 
-- [x] 課程查詢API
-- [x] 登入校務系統API
+- [x] 課程查詢爬蟲API
+- [x] 登入校務系統爬蟲API
 - [ ] 實作選課
 
-# Requirements 
+# Requirement 
 Python3
 
 # Quickstart
