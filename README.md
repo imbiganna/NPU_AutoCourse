@@ -4,12 +4,18 @@
 NPU選課小幫手，幫你選到你想要的課！
 
 
-# 實作進度
+# 實作進度 
 - [x] 課程查詢API
 - [x] 登入校務系統API
 - [ ] 實作選課
 
-# 環境需求
+# Requirements 
 Python3
 
+# Quickstart
+    pip3 install -r requirements.txt
+    python3 httpmain.py
+
+# DEMO
+https://biganna.myds.me
 
