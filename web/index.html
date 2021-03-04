@@ -20,12 +20,12 @@
         	<label style="height: 16px;" id="status">尚未登入☺️</label>
         </div>
     </nav>
-    <div class="register-photo" style="margin: 12px;" id="loginbar">
+   <div class="register-photo" style="margin: 12px;" id="loginbar">
         <div class="form-container" >
-            <form >
+            <form onsubmit='getCourse();'>
                 <h2 class="text-center"><strong>校務系統登入</strong></h2>
-                <div class="form-group"><input class="form-control" type="text" name="uid" id="uid" placeholder="學號" style="opacity: 1;"></div>
-                <div class="form-group"><input class="form-control" type="password" name="pwd" id="pwd" placeholder="密碼"></div>
+                <div class="form-group"><input class="form-control" type="text" name="uid" id="uid" placeholder="學號" maxlength="10" style="opacity: 1;"></div>
+                <div class="form-group"><input class="form-control" type="password" name="pwd" id="pwd" placeholder="密碼" maxlength="10" ></div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-block" type="button" onclick='getdata();' id="loginBtn">登入
                         <span class="spinner-border spinner-border-sm" role="done" id="loginBtnLoad" hidden></span>
@@ -37,10 +37,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6" style="background: rgb(241,247,252);border-style: none;font-size: 33px;width: 599px;padding: 106px;">
-                <form>
-                    <p style="font-size: 25px;filter: brightness(0%);font-style: normal;font-weight: bold;">課號查詢</p>
-                    <p style="font-size: 16px;filter: brightness(0%);font-style: normal;font-weight: normal;">課程名稱越完整查詢越快</p>
-                    <input class="form-control" type="text" style="width: 549;height: 20;" id='couName' >
+                <form id='getCou'>
+
+                    <p style="font-size: 25px;filter: brightness(0%);font-style: normal;font-weight: bold;">課程查詢</p>
+                    <a href="https://as2.npu.edu.tw/npu/ag_pro/ag202.jsp"><p style="font-size: 15px">不知道要選什麼嗎？點我查詢所有課程</p></a>
+                    <input class="form-control" type="text" style="width: 549;height: 20;" id='couName' placeholder='課程名稱' >
                     <button class="btn btn-primary " type="button" onclick='getCourse();' id="searchBtn" >
                         <span class="spinner-border spinner-border-sm" role="done" id="loadingBtn" hidden></span>
                         查詢
@@ -61,6 +62,7 @@
                         </tr>
                         </thead>
                         <tbody id = 'courseList'>
+
                         </tbody>
                     </table>
                 </div>
@@ -85,7 +87,8 @@
                     </button>
                 </div>
                 <div class="modal-body" id = goCourseList>
-                    <h6 style="color: red">注意！選課時請注意不得低修高年級科目，需手動紙本加選</h6><br>
+                	<h6 style="color: red">注意！選課時請注意不得低修高年級科目，需手動紙本加選，使用本系統不保證一定能選到課</h6><br>
+                    <h6 style="color: red">使用完畢務必至校務系統「課表」或是「歷年成績」確認，選課結果因為是偷跑所以看不到，二階段選課結束才會出現！！</h6><br>
                     <table class="table">
                         <thead>
                         <tr>
@@ -102,8 +105,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">不選了</button>
-                    <button type="button" class="btn btn-primary" onclick="goCourse();">選課啦GOGO!!</button>
-                </div>
+                    <button class="btn btn-primary " type="button" onclick='goCourse();' id="goCourseBtn" >
+                        <span class="spinner-border spinner-border-sm" role="done" id="courseLoadBtn" hidden></span>
+                        選課啦GOGO!
+                    </button>               
+                     </div>
             </div>
         </div>
     </div>
@@ -134,27 +140,15 @@
             </div>
         </div>
     </div>
-
-    <div class="team-boxed" style="background: rgb(241,247,252);">
-        <div class="container" style="background: rgb(241,247,252);">
-            <div class="intro">
-                <h2 class="text-center">開發人員</h2>
-            </div>
-            <div class="row people">
-                <div class="col-md-6 col-lg-4 item blocktext" >
-                    <div class="box"><img class="rounded-circle" src="assets/img/2.png">
-                        <h3 class="name">謝孟恆</h3>
-                        <p class="title">NPU資訊工程系</p>
-                        <p class="description">單身7年徵女友</p>
-                        <div class="social"><a href="https://instagram.com/imbiganna"><i class="fa fa-instagram"></i></a></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div style="background: rgb(241,247,252);"></div>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script >
+    	$('#getCou').submit(function () {
+		 getCourse();
+		 return false;
+		});
+    </script>
 </body>
 
 </html>

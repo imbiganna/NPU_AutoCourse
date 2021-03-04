@@ -19,7 +19,7 @@ function getdata () {
         document.getElementById("loginBtnLoad").hidden=false;
         document.getElementById("loginBtn").disabled=true;
         $.ajax({
-            url: "http://127.0.0.1:5000/?uid="+uid+"&pwd="+pwd,   //存取Json的網址
+            url: "https://biganna.myds.me:5002/?uid="+uid+"&pwd="+pwd,   //存取Json的網址
             type: "GET",
             cache:false,
             dataType: 'json',
@@ -43,15 +43,19 @@ function getdata () {
         });
     }
 };
+
 let tabName = ['cou_name','cou_date','canselect']
 var myData = new Array();
 function getCourse(){
     cname = document.getElementById("couName").value;
-    document.getElementById("loadingBtn").hidden=false;
+    if (cname == ''){
+        alert('請輸入課程名稱');
+    }else{
+            document.getElementById("loadingBtn").hidden=false;
     document.getElementById("searchBtn").disabled=true;
     document.getElementById('courseList').innerHTML = '';
     $.ajax({
-        url: "http://127.0.0.1:5000/?name="+cname,
+        url: "https://biganna.myds.me:5002/?name="+cname,
         type: "GET",
         cache:false,
         dataType: 'json',
@@ -75,7 +79,12 @@ function getCourse(){
                 }
 
                 var nButton = document.createElement("td");
-                nButton.innerHTML = "<button class=\"btn btn-primary\" type=\"button\" onclick=\"addCourse("+i+");\" id=\"addBtn"+data[i]["cou_id"]+"\" style=\" \">新增</button>";
+                if (data[i]['canselect'] == 0){
+                    nButton.innerHTML = "<button disabled = disabled class=\"btn btn-primary\" type=\"button\" onclick=\"addCourse("+i+");\" id=\"addBtn"+data[i]["cou_id"]+"\" style=\" \">已滿</button>";
+                }
+                else{
+                    nButton.innerHTML = "<button class=\"btn btn-primary\" type=\"button\" onclick=\"addCourse("+i+");\" id=\"addBtn"+data[i]["cou_id"]+"\" style=\" \">新增</button>";
+                }
                 nTable.appendChild(nButton);
 
                 nButton = document.createElement("td");
@@ -86,10 +95,11 @@ function getCourse(){
             }
             document.getElementById("loadingBtn").hidden=true;
             document.getElementById("searchBtn").disabled=false;
-            //alert(data[0]["cou_name"]);
         },
 
     });
+    }
+
 
 };
 let nameList = ["cou_name","cou_id","cou_score","cou_class","cou_dept","cou_times","cou_requ","cou_teach","cou_room","cou_info","canselect"];
@@ -108,7 +118,7 @@ function viewDetial(ind){
 function addCourse(id){
     let courseID = myData[id]['cou_id']
     needCourseList[courseID]=(myData[id]);
-    let chgbtn = document.getElementById("addBtn"+courseID);
+    var chgbtn = document.getElementById("addBtn"+courseID);
     chgbtn.setAttribute("onclick","delCourse('"+courseID+"','"+needCourseList[courseID]['indID']+"');");
     chgbtn.setAttribute("style","background: rgb(238,45,88)");
     chgbtn.innerHTML="移除";
@@ -116,7 +126,7 @@ function addCourse(id){
 }
 
 function delCourse(cId,indID){
-    let chgbtn = document.getElementById("addBtn"+cId);
+    var chgbtn = document.getElementById("addBtn"+cId);
     delete needCourseList[cId];
     chgbtn.setAttribute("onclick","addCourse('"+indID+"');");
     chgbtn.setAttribute("style"," ");
@@ -129,22 +139,21 @@ let updList = ['cou_name','cou_id','canselect'];
 
 function updateNeedList(){
     document.getElementById('selCourseList').innerHTML = '';
-    let updateList = document.getElementById("selCourseList");
-    for (let key in needCourseList){
-        console.log(key);
-        let li = document.createElement("tr");
+    var updateList = document.getElementById("selCourseList");
+    for (var key in needCourseList){
+        var li = document.createElement("tr");
         li.setAttribute("id", "needCourse"+key);
         updateList.appendChild(li)
-        let nTable = document.getElementById("needCourse"+key);
+        var nTable = document.getElementById("needCourse"+key);
 
-        for (let j = 0 ; j<3 ; j++){
-            let nTabloid = document.createElement("td");
-            nTabloid.setAttribute("CouID","needCourse0"+key);
-            nTabloid.innerHTML = needCourseList[key][updList[j]];
-            nTable.appendChild(nTabloid);
+        for (var j = 0 ; j<3 ; j++){
+            var nTableid = document.createElement("td");
+            nTableid.setAttribute("CouID","needCourse0"+key);
+            nTableid.innerHTML = needCourseList[key][updList[j]];
+            nTable.appendChild(nTableid);
         }
 
-        let nButton = document.createElement("button");
+        var nButton = document.createElement("button");
         nButton.setAttribute("class","btn btn-primary");
         nButton.setAttribute("type","button");
         nButton.setAttribute("onclick","delCourse('"+needCourseList[key]["cou_id"]+"','"+needCourseList[key]['indID']+"');");
@@ -154,12 +163,68 @@ function updateNeedList(){
         nTable.appendChild(nButton);
     }
 }
-s
+
+
 function goCourse(){
+    var couid='',i=0,noany=1;
+    for (var key in needCourseList){
+        noany=0;
+        if (i>0) {
+            couid+='andcou';
+        }
+        i++;
+        couid+=needCourseList[key]['cou_id'];
+    }
+    if (noany==1){
+        alert("請先新增課程！");
+        return 0;
+    }
+
     if (uid == undefined || pwd == undefined) {
         alert("請先登入！");
-    }else {
 
-        alert("還不能偷跑啦！！");
+    }else{
+        alert("如果遇到轉圈圈超過10秒就是被校務系統擋掉了，重整網頁一次就可以了！");
+        document.getElementById("courseLoadBtn").hidden=false;
+        document.getElementById("goCourseBtn").disabled=true;
+        $.ajax({
+            url: "https://biganna.myds.me:5002/?gogo=1&couid="+couid+"&uid="+uid+"&pwd="+pwd,   //存取Json的網址
+            type: "GET",
+            cache:false,
+            dataType: 'json',
+            contentType: "application/json",
+            crossDomain: true,
+            success: function (data) {
+                if (data[0]["status"] == "failDueRPT"){
+                    alert("選課失敗原因：已重複選課");
+                    document.getElementById("courseLoadBtn").hidden=true;
+                    document.getElementById("goCourseBtn").disabled=false; 
+                }
+                else if (data[0]["status"] == "failDueBusy"){
+                    alert("校務系統繁忙，請再試一次！");
+                }
+                else if (data[0]["status"] == "failDueBoom"){
+                    alert("選課失敗原因：衝堂");
+                    document.getElementById("courseLoadBtn").hidden=true;
+                    document.getElementById("goCourseBtn").disabled=false; 
+                }
+                else if (data[0]["status"] == "fail"){
+                    alert("選課失敗，原因不明，請私訊我IG協助我Debug，謝謝！");
+                    document.getElementById("courseLoadBtn").hidden=true;
+                    document.getElementById("goCourseBtn").disabled=false;
+                }else if (data[0]["status"] == "true"){
+                    alert("選課成功，即將轉跳至校務系統，請至課表確認是否加選成功");
+                    location.replace("https://as1.npu.edu.tw/npu/index.html");
+                }
+                document.getElementById("courseLoadBtn").hidden=true;
+                document.getElementById("goCourseBtn").disabled=false;
+            },
+            error: function(){
+                alert("哎呀！好像被校務系統擋掉了，再試一次吧！")
+                document.getElementById("courseLoadBtn").hidden=true;
+                document.getElementById("goCourseBtn").disabled=false;
+            }
+
+        });
     }
 }

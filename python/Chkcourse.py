@@ -11,7 +11,7 @@ session = requests.session()
 def findcourse(dept, sub):
 
 	print("GET Course....")
-	testquerys = {
+	payload = {
 		'year': '109',  # 學年
 		'sms': '2',  # 學期
 		'dgr_id': '14',  # 14=日間部
@@ -28,9 +28,9 @@ def findcourse(dept, sub):
 		'yms_sms': '2',
 		'reading': 'reading',
 	}
-	print("tes2")
-	requ = session.post("https://as2.npu.edu.tw/npu/ag_pro/ag202.jsp", data=testquerys, timeout=10)
-	print("tes3")
+	print("Session POST.....")
+	requ = session.post("https://as2.npu.edu.tw/npu/ag_pro/ag202.jsp", data=payload, timeout=10)
+	print("GET DATA!! Fetch...")
 	soup = BeautifulSoup(requ.text, 'html.parser')
 	a_tags = soup.find_all('td')
 	i = 20
@@ -62,9 +62,12 @@ def findcourse(dept, sub):
 		}
 		coutable.append(courseinfo)
 		i += 15
-		print(courseinfo)
+		#print(courseinfo)
 		if i >= len(a_tags):
 			break
+	with open('test.json', 'w') as outfile:
+		json.dump(coutable, outfile)
+
 	return json.dumps(coutable)
 
 
